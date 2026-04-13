@@ -31,9 +31,16 @@ class PCA():
         # TODO 5.2: Use it to sort eigenvalues and U
         eigenvalues = eigenvalues[sorting_inds]
         eigenvectors = eigenvectors[:, sorting_inds]
+
+        if isinstance(self.new_dim, float) and 0 < self.new_dim < 1:
+            explained_variance_ratio = eigenvalues / np.sum(eigenvalues)
+            cumulative_variance = np.cumsum(explained_variance_ratio)
+            n_components = np.argmax(cumulative_variance >= self.new_dim) + 1
+        else:
+            n_components = self.new_dim
         
         # TODO 6: Select the top L eigenvectors and set A accordingly
-        L = self.new_dim
+        L = n_components
         self.A = eigenvectors[:, :L]
         
         return self
